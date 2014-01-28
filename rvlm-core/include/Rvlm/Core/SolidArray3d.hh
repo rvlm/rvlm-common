@@ -6,9 +6,17 @@ namespace Rvlm {
 namespace Core {
 
 /**
- * Three-dimensional array in a solid block of memory.
+ * Tridimensional array in a solid block of memory.
  *
+ * It allocates memory in a way different from ordinary C and C++ arrays. All
+ * data is stored in contigurous block of memory, layd out from the first
+ * dimension (@em X) to the last one (@em Z). This kind of memory layout is
+ * also known as "Pascal arrays", which is opposed to "Fortran array" and, of
+ * course, "C arrays".
  *
+ * Like with ordinary arrays, after the class instance is created, it is not
+ * possible to change its dimensions. Moreover, neither range checking, not
+ * object initialization in individual cells is performed. This is done
  */
 template <
     typename valueType,
@@ -17,6 +25,7 @@ template <
 class SolidArray3d {
 public:
 
+    /** The type of allocator being used on creation. */
     typedef allocType AllocatorType;
     typedef indexType IndexType;
     typedef valueType ValueType;
@@ -35,9 +44,10 @@ public:
         IndexType countX,
         IndexType countY,
         IndexType countZ,
-        const AllocatorType& allocator = AllocatorType()) {
+        const AllocatorType& allocator = AllocatorType())
+        throw(std::range_error) {
 
-        // Cause 'IndexType' may be a signed type, ensure that all three
+        // Because 'IndexType' may be a signed type, ensure that all three
         // counts are positive. Intermediate constant 'zero' is here to
         // prevent "signed-unsigned comparison" compiler warning.
         const IndexType zero = 0;
@@ -63,8 +73,9 @@ public:
     }
 
     /**
-     * Gets items count along X dimension.
-     * This value is equal to the argument @a countX passed to constructor.
+     * Gets number of items along X dimension.
+     * This value is constant and equals to the argument @a countX passed
+     * to constructor.
      * @see getCountY
      * @see getCountZ
      * @see getTotalCount
@@ -72,8 +83,9 @@ public:
     IndexType getCountX() const { return mCountX; }
 
     /**
-     * Gets items count along Y dimension.
-     * This value is equal to the argument @a countY passed to constructor.
+     * Gets number of items along Y dimension.
+     * This value is constant and equals to the argument @a countY passed
+     * to constructor.
      * @see getCountX
      * @see getCountZ
      * @see getTotalCount
@@ -81,8 +93,9 @@ public:
     IndexType getCountY() const { return mCountY; }
 
     /**
-     * Gets items count along Z dimension.
-     * This value is equal to the argument @a countZ passed to constructor.
+     * Gets number of items along Z dimension.
+     * This value is constant and equals to the argument @a countZ passed
+     * to constructor.
      * @see getCountX
      * @see getCountY
      * @see getTotalCount
@@ -90,19 +103,31 @@ public:
     IndexType getCountZ() const { return mCountZ; }
 
     /**
-     * Gets items count along X dimension.
-     * This value is equal to the argument @a countX passed to constructor.
+     * Gets total number of items count in array.
+     * This value is constant and equals to the product of all three count
+     * arguments passed to constructor (@a countX * @a countY * @a countZ).
      * @see getCountX
      * @see getCountY
      * @see getCountZ
-     * @see getTotalCount
      */
     IndexType getTotalCount() const { return mTotalCount; }
 
 
     /**
      * Accesses item for reading by its coordinates.
-     * For performance reasons no range checking is performed.
+     * Argument indexes @a ix, @a iy and @a iz must satisfy the following
+     * range condition:
+     * @code
+     *     0 <= ix && ix < getCountX()
+     *     0 <= iy && iy < getCountY()
+     *     0 <= iz && iz < getCountZ()
+     * @edcode
+     * For performance reasons, this function DOES NOT check whether its
+     * arguments are all in valid ranges. These checks may be enabled for
+     * debug purposes with macro @c RVLM_CONFIG_RANGE_CHECK == 1.
+     *
+     * @see at(const CursorType&) const
+     * @see RVLM_CONFIG_RANGE_CHECK
      */
     ValueType& at(IndexType ix, IndexType iy, IndexType iz) const {
         return *itemAddress(ix, iy, iz);
@@ -148,23 +173,23 @@ public:
         cursor = getCursor(ix, iy, iz);
     }
 
-    void cursorPrevX(CursorType& cursor) const {
+    void cursorMoveToPrevX(CursorType& cursor) const {
         cursor -= mOffsetDX;
     }
 
-    void cursorNextX(CursorType& cursor) const {
+    void cursorMoveToNextX(CursorType& cursor) const {
         cursor += mOffsetDX;
     }
 
-    void cursorPrevY(CursorType& cursor) const {
+    void cursorMoveToPrevY(CursorType& cursor) const {
         cursor -= mOffsetDY;
     }
 
-    void cursorNextY(CursorType& cursor) const {
+    void cursorMoveToNextY(CursorType& cursor) const {
         cursor += mOffsetDY;
     }
 
-    void cursorPrevZ(CursorType& cursor) const {
+    void cursorMoveToPrevZ(CursorType& cursor) const {
         // Note that there is no 'mOffsetDZ' member for the sake
         // of performance since it is a constant expression which
         // would be not optimized by compiler if stored in a class
@@ -172,13 +197,17 @@ public:
         cursor -= sizeof(ValueType);
     }
 
-    void cursorNextZ(CursorType& cursor) const {
+    void cursorMoveToNextZ(CursorType& cursor) const {
+        // See comment in cursorMoveToPrevZ method.
         cursor += sizeof(ValueType);
     }
 
 private:
 
     IndexType itemOffset(IndexType ix, IndexType iy, IndexType iz) const {
+        RVLM_RANGE_ASSERT(0 <= ix && ix < mCountX);
+        RVLM_RANGE_ASSERT(0 <= iy && ix < mCountY);
+        RVLM_RANGE_ASSERT(0 <= iz && ix < mCountZ);
         return ix*mOffsetDX + iy*mOffsetDY + iz*sizeof(ValueType);
     }
 

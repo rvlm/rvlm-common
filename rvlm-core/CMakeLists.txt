@@ -1,2 +1,7 @@
-add_library(RvlmCore 
+add_custom_target(RvlmCore SOURCES
     include/rvlm/core/SolidArray3d.hh)
+
+install(
+    DIRECTORY include
+    DESTINATION include
+    PATTERN *.hh)

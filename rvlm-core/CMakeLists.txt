@@ -3,5 +3,5 @@ add_custom_target(RvlmCore SOURCES
 
 install(
     DIRECTORY include
-    DESTINATION include
+    DESTINATION .
     PATTERN *.hh)

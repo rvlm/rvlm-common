@@ -1,29 +1,19 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.11)
 
-set(RVLM_CORE_UNIT_TESTING TRUE CACHE BOOL
-    "Enable unit testing in library")
+option(RVLM_CORE_BUILD_TESTS "Build unit tests for rvlm-core library")
 
-add_custom_target(RvlmCore SOURCES
+add_library(RvlmCore
     include/rvlm/core/NonAssignable.hh
     include/rvlm/core/SolidArray3d.hh
     include/rvlm/core/Flags.hh
     include/rvlm/core/Math.hh
-    include/rvlm/core/Constants.hh)
+    include/rvlm/core/Constants.hh
+    dummy.cc)
+target_include_directories(RvlmCore PUBLIC include)
 
-install(
-    DIRECTORY include
-    DESTINATION .
-    PATTERN *.hh)
-if(RVLM_CORE_UNIT_TESTING)
-find_package(Threads REQUIRED)
-find_package(GTest REQUIRED)
+if(RVLM_UNIT_TESTING AND RVLM_CORE_BUILD_TESTS)
 add_executable(RvlmCoreTest
-    tests/Flags.test.cc
-target_include_directories(RvlmCoreTest
-    PRIVATE include
-    PRIVATE ${GTEST_INCLUDE_DIRS})
-target_link_libraries(RvlmCoreTest
-    ${CMAKE_THREAD_LIBS_INIT}
-    ${GTEST_LIBRARIES}
-    ${GTEST_MAIN_LIBRARIES})
+    tests/Flags.test.cc)
+target_link_libraries(RvlmCoreTest RvlmCore GTestMain)
+add_test(RvlmCoreTest RvlmCoreTest)
 endif()

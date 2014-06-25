@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 2.8.11)
 option(RVLM_CORE_BUILD_TESTS "Build unit tests for rvlm-core library")
 
 add_library(RvlmCore
+    include/rvlm/core/memory/IAllocator.hh
+    include/rvlm/core/memory/IAlignedAllocator.hh
     include/rvlm/core/NonAssignable.hh
     include/rvlm/core/SolidArray3d.hh
     include/rvlm/core/Flags.hh

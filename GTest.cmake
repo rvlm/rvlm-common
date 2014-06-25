@@ -4,7 +4,7 @@ include(ExternalProject)
 set(GTEST_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/gtest")
 ExternalProject_Add(GTestExternal
     SVN_REPOSITORY http://googletest.googlecode.com/svn/trunk
-    SVN_REVISION -r HEAD
+    SVN_REVISION -r 687
     TIMEOUT 10
     PREFIX "${GTEST_PREFIX}"
     INSTALL_COMMAND "")

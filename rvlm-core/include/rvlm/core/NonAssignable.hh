@@ -26,7 +26,8 @@ class NonAssignable {
 private:
     NonAssignable(NonAssignable const&);
     NonAssignable& operator=(NonAssignable const&);
-public:
+
+protected:
     NonAssignable() {}
 };
 

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 option(RVLM_CORE_BUILD_TESTS "Build unit tests for rvlm-core library")
 
 add_library(RvlmCore
+    include/rvlm/object_ptr.hh
     include/rvlm/core/memory/IAllocator.hh
     include/rvlm/core/memory/IAlignedAllocator.hh
     include/rvlm/core/memory/StlAllocator.hh
@@ -21,6 +22,7 @@ set_target_properties(RvlmCore PROPERTIES
 
 if(RVLM_CORE_BUILD_TESTS)
     add_executable(RvlmCoreTest
+        tests/object_ptr_test.cc
         tests/Flags_test.cc
         tests/main.cc)
     target_include_directories(RvlmCoreTest PUBLIC ${RVLM_CATCH_INCLUDE_PATH})

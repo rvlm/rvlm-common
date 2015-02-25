@@ -1,9 +1,9 @@
 #pragma once
-#include <allocator>
 #include <stdexcept>
+#include "rvlm/core/memory/IAllocator.hh"
 
-namespace Rvlm {
-namespace Core {
+namespace rvlm {
+namespace core {
 
 /**
  * Tridimensional array in a solid block of memory.
@@ -18,18 +18,13 @@ namespace Core {
  * possible to change its dimensions. Moreover, neither range checking, not
  * object initialization in individual cells is performed. This is done
  */
-template <
-    typename valueType,
-    typename indexType = size_t,
-    typename allocType = std::allocator<valueType> >
+template <typename TValue>
 class SolidArray3d {
 public:
 
-    /** The type of allocator being used on creation. */
-    typedef allocType AllocatorType;
-    typedef indexType IndexType;
-    typedef valueType ValueType;
-    typedef void*     CursorType;
+    typedef std::int_fast32_t IndexType;
+    typedef TValue ValueType;
+    typedef TValue*  CursorType;
 
     /**
      * Constructs array with given dimentions and allocator.
@@ -44,8 +39,8 @@ public:
         IndexType countX,
         IndexType countY,
         IndexType countZ,
-        const AllocatorType& allocator = AllocatorType())
-        throw(std::range_error) {
+        const IAllocator* allocator = 0)
+        throw(std::bad_alloc, std::range_error) {
 
         // Because 'IndexType' may be a signed type, ensure that all three
         // counts are positive. Intermediate constant 'zero' is here to
@@ -60,16 +55,16 @@ public:
         mTotalCount = countX * countY * countZ;
         mOffsetDX   = sizeof(ValueType) * countY * countZ;
         mOffsetDY   = sizeof(ValueType) * countZ;
-        mAllocator  = allocator;
-        mData       = allocator.allocate(mTotalCount);
+        mAllocator  = allocator ? allocator : &mStdAllocator;
+        mData       = mAllocator->allocate(mTotalCount);
     }
 
     /**
      * Destructs array with all its data.
      * The allocator passed to constructor is also used for deallocation.
      */
-    ~SolidArray() {
-        mAllocator.deallocate(mData, mTotalCount);
+    ~SolidArray3d() {
+        mAllocator->deallocate(mData);
     }
 
     /**
@@ -205,9 +200,9 @@ public:
 private:
 
     IndexType itemOffset(IndexType ix, IndexType iy, IndexType iz) const {
-        RVLM_RANGE_ASSERT(0 <= ix && ix < mCountX);
-        RVLM_RANGE_ASSERT(0 <= iy && ix < mCountY);
-        RVLM_RANGE_ASSERT(0 <= iz && ix < mCountZ);
+        //RVLM_RANGE_ASSERT(0 <= ix && ix < mCountX);
+        //RVLM_RANGE_ASSERT(0 <= iy && ix < mCountY);
+        //RVLM_RANGE_ASSERT(0 <= iz && ix < mCountZ);
         return ix*mOffsetDX + iy*mOffsetDY + iz*sizeof(ValueType);
     }
 
@@ -216,10 +211,15 @@ private:
             reinterpret_cast<void*>(mData) + itemOffset(ix, iy, iz));
     }
 
+    IndexType      mCountX;
+    IndexType      mCountY;
+    IndexType      mCountZ;
+    IndexType      mTotalCount;
     IndexType      mOffsetDX;
     IndexType      mOffsetDY;
-    AllocatorType  mAllocator;
+    IAllocator*    mAllocator;
     ValueType*     mData;
+    StandardAllocator mStdAllocator;
 };
 
 } // namespace Core

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 2.8)
 
 option(RVLM_CORE_BUILD_TESTS "Build unit tests for rvlm-core library")
 
@@ -15,13 +15,18 @@ add_library(RvlmCore
     include/rvlm/core/Constants.hh
     dummy.cc)
 target_include_directories(RvlmCore PUBLIC include)
+set_target_properties(RvlmCore PROPERTIES
+    CXX_STANDARD_REQUIRED TRUE
+    CXX_STANDARD          11)
 
-if(RVLM_UNIT_TESTING AND RVLM_CORE_BUILD_TESTS)
-add_executable(RvlmCoreTest
-    tests/memory/OperatorNewAllocator.test.cc
-    tests/memory/StlAllocator.test.cc
-    tests/memory/StupidAlignedAllocator.test.cc)
-    tests/Flags.test.cc)
-target_link_libraries(RvlmCoreTest RvlmCore GTestMain)
-add_test(RvlmCoreTest RvlmCoreTest)
+if(RVLM_CORE_BUILD_TESTS)
+    add_executable(RvlmCoreTest
+        tests/Flags_test.cc
+        tests/main.cc)
+    target_include_directories(RvlmCoreTest PUBLIC ${RVLM_CATCH_INCLUDE_PATH})
+    target_link_libraries(RvlmCoreTest RvlmCore)
+    set_target_properties(RvlmCoreTest PROPERTIES
+        CXX_STANDARD_REQUIRED TRUE
+        CXX_STANDARD          11)
+    add_test(RvlmCoreTest1 RvlmCoreTest)
 endif()

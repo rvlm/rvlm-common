@@ -36,6 +36,11 @@ class IAlignedAllocator {
 public:
 
     /**
+     * Constructor is absent from class.
+     */
+    IAlignedAllocator() = delete;
+
+    /**
      * Destructor is absent from class.
      */
     ~IAlignedAllocator() = delete;

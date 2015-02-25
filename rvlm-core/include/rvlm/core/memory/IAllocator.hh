@@ -31,6 +31,11 @@ class IAllocator {
 public:
 
     /**
+     * Constructor is absent from class.
+     */
+    IAllocator() = delete;
+
+    /**
      * Destructor is absent from class.
      */
     ~IAllocator() = delete;

@@ -11,12 +11,13 @@ namespace core {
  * It allocates memory in a way different from ordinary C and C++ arrays. All
  * data is stored in contigurous block of memory, layd out from the first
  * dimension (@em X) to the last one (@em Z). This kind of memory layout is
- * also known as "Pascal arrays", which is opposed to "Fortran array" and, of
- * course, "C arrays".
+ * also known as "Pascal array", which is opposed to "Fortran array" and, of
+ * course, "C array".
  *
  * Like with ordinary arrays, after the class instance is created, it is not
  * possible to change its dimensions. Moreover, neither range checking, not
  * object initialization in individual cells is performed. This is done
+ * intentionally for runtime performance.
  */
 template <typename TValue>
 class SolidArray3d {

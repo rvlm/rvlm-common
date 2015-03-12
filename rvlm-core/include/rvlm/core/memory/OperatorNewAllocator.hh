@@ -17,14 +17,14 @@ public:
     /**
      * Allocates memory using global operator @c new.
      */
-    virtual void* allocate(size_t size) throw(std::bad_alloc) override {
+    virtual void* allocate(size_t size) throw (std::bad_alloc) override {
         return ::operator new (size);
     }
 
     /**
      * Deallocates memory using global operator @c delete.
      */
-    virtual void deallocate(void* ptr) throw(std::bad_alloc) override {
+    virtual void deallocate(void* ptr) throw (std::bad_alloc) override {
         ::operator delete (ptr);
     }
 };

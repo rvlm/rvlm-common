@@ -12,10 +12,8 @@ namespace memory {
  * Wraps @c IAllocator for STL.
  */
 template <typename T = void>
-class StlAllocator
-{
+class StlAllocator {
 private:
-
     /**
      * @internal
      * Underlying allocator which actually allocates memory.
@@ -62,27 +60,31 @@ public:
      * @param hint Allocation hint (see STL documentation).
      * @return     Pointer to allocated memory.
      */
-    pointer allocate(size_type n, std::allocator<void>::const_pointer hint = 0){
+    pointer allocate(size_type n, std::allocator<void>::const_pointer hint = 0)
+                                                                     override {
         (void)hint; // unused
-        return static_cast<pointer>(
-            mActualAllocator->allocate(n*sizeof(T)));
+        return static_cast<pointer>(mActualAllocator->allocate(n*sizeof(T)));
     }
 
     /**
      * Deallocates memory using underlying allocator object.
      */
-    void deallocate(pointer p, size_type n) {
+    void deallocate(pointer p, size_type n) override {
         mActualAllocator->deallocate(p);
     }
 };
 
+/**
+ *
+ */
 template <>
 inline StlAllocator<void>::pointer StlAllocator<void>::allocate(
-    StlAllocator<void>::size_type n,
-    std::allocator<void>::const_pointer hint = 0) {
+                    StlAllocator<void>::size_type n,
+                    std::allocator<void>::const_pointer hint = 0) {
+
     (void)hint; // unused
     return static_cast<StlAllocator<void>::pointer>(
-        mActualAllocator->allocate(n*sizeof(T)));
+        mActualAllocator->allocate(n));
 }
 
 } // namespace memory

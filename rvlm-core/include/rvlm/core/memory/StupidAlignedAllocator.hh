@@ -2,7 +2,7 @@
 #include <cinttypes>
 #include <cstdlib>
 #include <stdexcept>
-#include "rvlm/core/memory/IAllocator.hh"
+#include "rvlm/core/memory/IAlignedAllocator.hh"
 
 namespace rvlm {
 namespace core {
@@ -19,7 +19,7 @@ namespace memory {
  * which does unalligned allocation and then "aligns" it out, keeping
  * orignal unaligned address in the allocated block itself.
  */
-class OperatorNewAllocator: public virtual IAllocator {
+class StupidAlignedAllocator: public virtual IAlignedAllocator {
 public:
     /**
      * Allocates memory using global operator @c new.

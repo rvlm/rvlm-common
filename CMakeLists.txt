@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 option(RVLM_CORE_BUILD_TESTS "Build unit tests for rvlm-core library")
 
-add_library(RvlmCore
-    include/rvlm/object_ptr.hh
+add_library(rvlm-common
     include/rvlm/core/memory/IAllocator.hh
     include/rvlm/core/memory/IAlignedAllocator.hh
     include/rvlm/core/memory/StlAllocator.hh
@@ -14,19 +13,18 @@ add_library(RvlmCore
     include/rvlm/core/Math.hh
     include/rvlm/core/Constants.hh
     src/dummy.cc)
-target_include_directories(RvlmCore PUBLIC include)
-set_target_properties(RvlmCore PROPERTIES
+target_include_directories(rvlm-common PUBLIC include)
+set_target_properties(rvlm-common PROPERTIES
     CXX_STANDARD_REQUIRED TRUE
     CXX_STANDARD          11)
 
 if(RVLM_CORE_BUILD_TESTS)
-    add_executable(RvlmCoreTest
+    add_executable(rvlm-common-test
         test/Flags_test.cc
         test/main.cc)
-    target_include_directories(RvlmCoreTest PUBLIC ${RVLM_CATCH_INCLUDE_PATH})
-    target_link_libraries(RvlmCoreTest RvlmCore)
-    set_target_properties(RvlmCoreTest PROPERTIES
+    target_link_libraries(rvlm-common-test rvlm-common Thirdparty::Catch)
+    set_target_properties(rvlm-common-test PROPERTIES
         CXX_STANDARD_REQUIRED TRUE
         CXX_STANDARD          11)
-    add_test(RvlmCoreTest1 RvlmCoreTest)
+    add_test(rvlm-common-test rvlm-common-test)
 endif()

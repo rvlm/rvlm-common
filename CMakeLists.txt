@@ -7,6 +7,7 @@ add_library(rvlm-common
     include/rvlm/core/memory/IAlignedAllocator.hh
     include/rvlm/core/memory/StlAllocator.hh
     include/rvlm/core/memory/OperatorNewAllocator.hh
+    include/rvlm/core/ITraversable3d.hh
     include/rvlm/core/NonAssignable.hh
     include/rvlm/core/SolidArray3d.hh
     include/rvlm/core/Flags.hh

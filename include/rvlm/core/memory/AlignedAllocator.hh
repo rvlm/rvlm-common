@@ -32,22 +32,22 @@ namespace memory {
  * Please, remember to use public virtual inheritance when implementing
  * this interface.
  *
- * @see IAllocator
+ * @see Allocator
  * @see StupidAlignedAllocator
  * @see http://stackoverflow.com/a/318466/1447225
  */
-class IAlignedAllocator {
+class AlignedAllocator {
 public:
 
     /**
      * Constructor is absent from class.
      */
-    IAlignedAllocator() = delete;
+    AlignedAllocator() = delete;
 
     /**
      * Destructor is absent from class.
      */
-    ~IAlignedAllocator() = delete;
+    ~AlignedAllocator() = delete;
 
     /**
      * Allocates @a size bytes of memory with alignment guarranty.

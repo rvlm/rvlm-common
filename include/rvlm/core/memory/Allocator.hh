@@ -28,23 +28,23 @@ namespace memory {
  * Please, remember to use public virtual inheritance when implementing
  * this interface.
  *
- * @see IAlignedAllocator
+ * @see AlignedAllocator
  * @see OperatorNewAllocator
  * @see StlAllocator
  * @see http://stackoverflow.com/a/318466/1447225
  */
-class IAllocator {
+class Allocator {
 public:
 
     /**
      * Constructor is absent from class.
      */
-    IAllocator() = delete;
+    Allocator() = delete;
 
     /**
      * Destructor is absent from class.
      */
-    ~IAllocator() = delete;
+    ~Allocator() = delete;
 
     /**
      * Allocates @a size bytes of memory with no alignment guarranty.

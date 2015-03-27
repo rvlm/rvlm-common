@@ -6,7 +6,7 @@ namespace core {
 template <typename valueType,
           typename indexType,
           typename cursorType>
-class ITraversable3D {
+class Traversable3D {
 public:
 
     typedef indexType IndexType;

@@ -1,7 +1,7 @@
 #pragma once
 #include <cinttypes>
 #include <stdexcept>
-#include "rvlm/core/memory/IAllocator.hh"
+#include "rvlm/core/memory/Allocator.hh"
 
 namespace rvlm {
 namespace core {
@@ -10,9 +10,9 @@ namespace memory {
 /**
  * Allocator using standard library for memory allocation.
  * It employs global operator @c new for unaligned memory allocation.
- * @see IAllocator
+ * @see Allocator
  */
-class OperatorNewAllocator: public virtual IAllocator {
+class OperatorNewAllocator: public virtual Allocator {
 public:
     /**
      * Allocates memory using global operator @c new.

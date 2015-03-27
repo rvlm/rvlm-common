@@ -2,14 +2,14 @@
 #include <cinttypes>
 #include <stdexcept>
 #include <memory>
-#include "rvlm/core/memory/IAllocator.hh"
+#include "rvlm/core/memory/Allocator.hh"
 
 namespace rvlm {
 namespace core {
 namespace memory {
 
 /**
- * Wraps @c IAllocator for STL.
+ * Wraps @c Allocator for STL.
  */
 template <typename T = void>
 class StlAllocator {
@@ -19,7 +19,7 @@ private:
      * Underlying allocator which actually allocates memory.
      *
      */
-    IAllocator *mActualAllocator;
+    Allocator *mActualAllocator;
 
 public:
     typedef std::allocator<T>::value_type  value_type;
@@ -32,7 +32,7 @@ public:
      * to this constructor, and it will not be deleted or uninitialized in any
      * other way after this STL allocator is destroyed.
      */
-    StlAllocator(const IAllocator* alloc) throw() {
+    StlAllocator(const Allocator* alloc) throw() {
         mActualAllocator = alloc;
     }
 

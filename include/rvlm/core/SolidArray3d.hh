@@ -1,6 +1,6 @@
 #pragma once
 #include <stdexcept>
-#include "rvlm/core/memory/IAllocator.hh"
+#include "rvlm/core/memory/Allocator.hh"
 
 namespace rvlm {
 namespace core {
@@ -40,7 +40,7 @@ public:
         IndexType countX,
         IndexType countY,
         IndexType countZ,
-        const IAllocator* allocator = 0)
+        const Allocator* allocator = 0)
         throw(std::bad_alloc, std::range_error) {
 
         // Because 'IndexType' may be a signed type, ensure that all three
@@ -218,7 +218,7 @@ private:
     IndexType      mTotalCount;
     IndexType      mOffsetDX;
     IndexType      mOffsetDY;
-    IAllocator*    mAllocator;
+    Allocator*     mAllocator;
     ValueType*     mData;
     StandardAllocator mStdAllocator;
 };

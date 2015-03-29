@@ -72,9 +72,6 @@ public:
      * Gets number of items along X dimension.
      * This value is constant and equals to the argument @a countX passed
      * to constructor.
-     * @see getCountY
-     * @see getCountZ
-     * @see getTotalCount
      */
     IndexType getCountX() const { return mCountX; }
 
@@ -82,9 +79,6 @@ public:
      * Gets number of items along Y dimension.
      * This value is constant and equals to the argument @a countY passed
      * to constructor.
-     * @see getCountX
-     * @see getCountZ
-     * @see getTotalCount
      */
     IndexType getCountY() const { return mCountY; }
 
@@ -92,9 +86,6 @@ public:
      * Gets number of items along Z dimension.
      * This value is constant and equals to the argument @a countZ passed
      * to constructor.
-     * @see getCountX
-     * @see getCountY
-     * @see getTotalCount
      */
     IndexType getCountZ() const { return mCountZ; }
 
@@ -102,9 +93,6 @@ public:
      * Gets total number of items count in array.
      * This value is constant and equals to the product of all three count
      * arguments passed to constructor (@a countX * @a countY * @a countZ).
-     * @see getCountX
-     * @see getCountY
-     * @see getCountZ
      */
     IndexType getTotalCount() const { return mTotalCount; }
 
@@ -117,12 +105,11 @@ public:
      *     0 <= ix && ix < getCountX()
      *     0 <= iy && iy < getCountY()
      *     0 <= iz && iz < getCountZ()
-     * @edcode
+     * @endcode
      * For performance reasons, this function DOES NOT check whether its
      * arguments are all in valid ranges. These checks may be enabled for
      * debug purposes with macro @c RVLM_CONFIG_RANGE_CHECK == 1.
      *
-     * @see at(const CursorType&) const
      * @see RVLM_CONFIG_RANGE_CHECK
      */
     ValueType& at(IndexType ix, IndexType iy, IndexType iz) const {
@@ -156,7 +143,7 @@ public:
     /**
      * Constructs cursor pointing to given item.
      * This method is the only way to obtain a valid cursor object.
-     * Arguments @a ix, @a iy and @iz are the coordinates of the item which
+     * Arguments @a ix, @a iy and @a iz are the coordinates of the item which
      * is pointed by the created cursor.
      * @see REF_SECTION_CURSORS
      */

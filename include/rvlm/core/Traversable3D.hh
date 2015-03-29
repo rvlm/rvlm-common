@@ -29,7 +29,7 @@ public:
      *     0 <= ix && ix < getCountX()
      *     0 <= iy && iy < getCountY()
      *     0 <= iz && iz < getCountZ()
-     * @edcode
+     * @endcode
      * For performance reasons, this function DOES NOT check whether its
      * arguments are all in valid ranges.
      *
@@ -44,7 +44,7 @@ public:
     /**
      * Constructs cursor pointing to given item.
      * This method is the only way to obtain a valid cursor object.
-     * Arguments @a ix, @a iy and @iz are the coordinates of the item which
+     * Arguments @a ix, @a iy and @a iz are the coordinates of the item which
      * is pointed by the created cursor.
      */
     CursorType getCursor(IndexType ix, IndexType iy, IndexType iz) const = 0;

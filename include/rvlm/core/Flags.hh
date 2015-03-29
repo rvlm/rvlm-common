@@ -38,7 +38,7 @@ public:
 
     /**
      * Includes flag for @a item into this set.
-     * Nothing bad happens if the @item has been already included, though.
+     * Nothing bad happens if the @a item has been already included, though.
      */
     void include(const TEnum& item) {
         *this += item;
@@ -46,7 +46,7 @@ public:
 
     /**
      * Excludes flag for @a item from this set.
-     * Nothing bad happens if the @item has been already excluded, though.
+     * Nothing bad happens if the @a item has been already excluded, though.
      */
     void exclude(const TEnum& item) {
         *this -= item;

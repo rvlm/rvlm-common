@@ -1,9 +1,13 @@
 #pragma once
 #include <stdexcept>
 #include "rvlm/core/memory/Allocator.hh"
+#include "rvlm/core/memory/OperatorNewAllocator.hh"
 
 namespace rvlm {
 namespace core {
+
+using Allocator = rvlm::core::memory::Allocator;
+using StandardAllocator = rvlm::core::memory::OperatorNewAllocator;
 
 /**
  * Tridimensional array in a solid block of memory.
@@ -40,7 +44,7 @@ public:
         IndexType countX,
         IndexType countY,
         IndexType countZ,
-        const Allocator* allocator = 0)
+        Allocator* allocator = 0)
         throw(std::bad_alloc, std::range_error) {
 
         // Because 'IndexType' may be a signed type, ensure that all three
@@ -57,7 +61,7 @@ public:
         mOffsetDX   = sizeof(ValueType) * countY * countZ;
         mOffsetDY   = sizeof(ValueType) * countZ;
         mAllocator  = allocator ? allocator : &mStdAllocator;
-        mData       = mAllocator->allocate(mTotalCount);
+        mData       = (ValueType*)mAllocator->allocate(mTotalCount * sizeof(ValueType));
     }
 
     /**
@@ -66,6 +70,11 @@ public:
      */
     ~SolidArray3d() {
         mAllocator->deallocate(mData);
+    }
+
+    void fill(ValueType const& val) {
+        ValueType *data = mData;
+        std::fill(data, data + mTotalCount, val);
     }
 
     /**

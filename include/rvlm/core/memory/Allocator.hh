@@ -37,16 +37,6 @@ class Allocator {
 public:
 
     /**
-     * Constructor is absent from class.
-     */
-    Allocator() = delete;
-
-    /**
-     * Destructor is absent from class.
-     */
-    ~Allocator() = delete;
-
-    /**
      * Allocates @a size bytes of memory with no alignment guarranty.
      * Returns pointer to allocated memory. This pointer doesn't have to be
      * aligned in any way.

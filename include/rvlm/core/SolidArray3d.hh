@@ -58,8 +58,8 @@ public:
         mCountY     = countY;
         mCountZ     = countZ;
         mTotalCount = countX * countY * countZ;
-        mOffsetDX   = sizeof(ValueType) * countY * countZ;
-        mOffsetDY   = sizeof(ValueType) * countZ;
+        mOffsetDX   = countY * countZ;
+        mOffsetDY   = countZ;
         mAllocator  = allocator ? allocator : &mStdAllocator;
         mData       = (ValueType*)mAllocator->allocate(mTotalCount * sizeof(ValueType));
     }
@@ -122,7 +122,8 @@ public:
      * @see RVLM_CONFIG_RANGE_CHECK
      */
     ValueType& at(IndexType ix, IndexType iy, IndexType iz) const {
-        return *itemAddress(ix, iy, iz);
+        IndexType idx = itemIndex(ix, iy, iz);
+	return mData[idx];
     }
 
     /**
@@ -130,7 +131,8 @@ public:
      * For performance reasons no range checking is performed.
      */
     ValueType& at(IndexType ix, IndexType iy, IndexType iz) {
-        return *itemAddress(ix, iy, iz);
+        IndexType idx = itemIndex(ix, iy, iz);
+	return mData[idx];
     }
 
     /**
@@ -138,7 +140,7 @@ public:
      * @see REF_SECTION_CURSORS
      */
     ValueType& at(const CursorType& cursor) const {
-        return *reinterpret_cast<ValueType*>(cursor);
+        return *cursor;
     }
 
     /**
@@ -146,7 +148,7 @@ public:
      * @see REF_SECTION_CURSORS
      */
     ValueType& at(const CursorType& cursor) {
-        return *reinterpret_cast<ValueType*>(cursor);
+        return *cursor;
     }
 
     /**
@@ -157,12 +159,12 @@ public:
      * @see REF_SECTION_CURSORS
      */
     CursorType getCursor(IndexType ix, IndexType iy, IndexType iz) const {
-        return reinterpret_cast<CursorType>(itemAddress(ix, iy, iz));
+        return itemAddress(ix, iy, iz);
     }
 
     void cursorMoveTo(
         CursorType& cursor, IndexType ix, IndexType iy, IndexType iz) const {
-        cursor = getCursor(ix, iy, iz);
+        cursor = itemAddress(ix, iy, iz);
     }
 
     void cursorMoveToPrevX(CursorType& cursor) const {
@@ -182,30 +184,24 @@ public:
     }
 
     void cursorMoveToPrevZ(CursorType& cursor) const {
-        // Note that there is no 'mOffsetDZ' member for the sake
-        // of performance since it is a constant expression which
-        // would be not optimized by compiler if stored in a class
-        // member variable.
-        cursor -= sizeof(ValueType);
+        --cursor;
     }
 
     void cursorMoveToNextZ(CursorType& cursor) const {
-        // See comment in cursorMoveToPrevZ method.
-        cursor += sizeof(ValueType);
+        ++cursor;
     }
 
 private:
 
-    IndexType itemOffset(IndexType ix, IndexType iy, IndexType iz) const {
+    IndexType itemIndex(IndexType ix, IndexType iy, IndexType iz) const {
         //RVLM_RANGE_ASSERT(0 <= ix && ix < mCountX);
         //RVLM_RANGE_ASSERT(0 <= iy && ix < mCountY);
         //RVLM_RANGE_ASSERT(0 <= iz && ix < mCountZ);
-        return ix*mOffsetDX + iy*mOffsetDY + iz*sizeof(ValueType);
+        return ix*mOffsetDX + iy*mOffsetDY + iz;
     }
 
     ValueType* itemAddress(IndexType ix, IndexType iy, IndexType iz) const {
-        return reinterpret_cast<ValueType*>(
-            reinterpret_cast<void*>(mData) + itemOffset(ix, iy, iz));
+        return &mData[itemIndex(ix, iy, iz)];
     }
 
     IndexType      mCountX;

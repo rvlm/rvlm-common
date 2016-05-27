@@ -1,5 +1,6 @@
 #pragma once
 #include <stdexcept>
+#include "rvlm/core/NonAssignable.hh"
 #include "rvlm/core/memory/Allocator.hh"
 #include "rvlm/core/memory/OperatorNewAllocator.hh"
 
@@ -24,7 +25,7 @@ using StandardAllocator = rvlm::core::memory::OperatorNewAllocator;
  * intentionally for runtime performance.
  */
 template <typename TValue>
-class SolidArray3d {
+class SolidArray3d: public rvlm::core::NonAssignable {
 public:
 
     typedef std::int_fast32_t IndexType;
@@ -44,6 +45,7 @@ public:
         IndexType countX,
         IndexType countY,
         IndexType countZ,
+        ValueType defaultValue,
         Allocator* allocator = 0)
         throw(std::bad_alloc, std::range_error) {
 
@@ -62,6 +64,8 @@ public:
         mOffsetDY   = countZ;
         mAllocator  = allocator ? allocator : &mStdAllocator;
         mData       = (ValueType*)mAllocator->allocate(mTotalCount * sizeof(ValueType));
+
+        fill(defaultValue);
     }
 
     /**

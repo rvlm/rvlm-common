@@ -1,5 +1,6 @@
 #pragma once
 #include <stdexcept>
+#include <vector>
 #include "rvlm/core/NonAssignable.hh"
 #include "rvlm/core/memory/Allocator.hh"
 #include "rvlm/core/memory/OperatorNewAllocator.hh"
@@ -47,7 +48,9 @@ public:
         IndexType countZ,
         ValueType defaultValue,
         Allocator* allocator = 0)
-        throw(std::bad_alloc, std::range_error) {
+        throw(std::bad_alloc, std::range_error) :
+        mData(countX * countY * countZ, defaultValue)
+    {
 
         // Because 'IndexType' may be a signed type, ensure that all three
         // counts are positive. Intermediate constant 'zero' is here to
@@ -63,9 +66,12 @@ public:
         mOffsetDX   = countY * countZ;
         mOffsetDY   = countZ;
         mAllocator  = allocator ? allocator : &mStdAllocator;
-        mData       = (ValueType*)mAllocator->allocate(mTotalCount * sizeof(ValueType));
+        //mData       = (ValueType*)mAllocator->allocate(mTotalCount * sizeof(ValueType));
 
-        fill(defaultValue);
+        //for (IndexType i = 0; i < mTotalCount; ++i)
+        //    new(&mData[i]) ValueType();
+
+       //fill(defaultValue);
     }
 
     /**
@@ -73,12 +79,12 @@ public:
      * The allocator passed to constructor is also used for deallocation.
      */
     ~SolidArray3d() {
-        mAllocator->deallocate(mData);
+        // mAllocator->deallocate(mData);
     }
 
-    void fill(ValueType const& val) {
-        ValueType *data = mData;
-        std::fill(data, data + mTotalCount, val);
+    void fill(ValueType val) {
+        //ValueType *data = mData;
+        //std::fill(data, data + mTotalCount, val);
     }
 
     /**
@@ -125,7 +131,7 @@ public:
      *
      * @see RVLM_CONFIG_RANGE_CHECK
      */
-    ValueType& at(IndexType ix, IndexType iy, IndexType iz) const {
+    ValueType const& at(IndexType ix, IndexType iy, IndexType iz) const {
         IndexType idx = itemIndex(ix, iy, iz);
 	return mData[idx];
     }
@@ -215,7 +221,7 @@ private:
     IndexType      mOffsetDX;
     IndexType      mOffsetDY;
     Allocator*     mAllocator;
-    ValueType*     mData;
+    std::vector<ValueType> mData;
     StandardAllocator mStdAllocator;
 };
 

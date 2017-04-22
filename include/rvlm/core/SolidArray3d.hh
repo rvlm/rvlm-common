@@ -1,9 +1,8 @@
 #pragma once
 #include <stdexcept>
-#include <vector>
-#include "rvlm/core/NonAssignable.hh"
 #include "rvlm/core/memory/Allocator.hh"
 #include "rvlm/core/memory/OperatorNewAllocator.hh"
+#include "rvlm/core/NonAssignable.hh"
 
 namespace rvlm {
 namespace core {
@@ -30,8 +29,8 @@ class SolidArray3d: public rvlm::core::NonAssignable {
 public:
 
     typedef std::int_fast32_t IndexType;
-    typedef TValue ValueType;
-    typedef TValue*  CursorType;
+    typedef TValue            ValueType;
+    typedef TValue*           CursorType;
 
     /**
      * Constructs array with given dimentions and allocator.
@@ -46,11 +45,9 @@ public:
         IndexType countX,
         IndexType countY,
         IndexType countZ,
-        ValueType defaultValue,
+        ValueType fillValue = 0,
         Allocator* allocator = 0)
-        throw(std::bad_alloc, std::range_error) :
-        mData(countX * countY * countZ, defaultValue)
-    {
+        throw(std::bad_alloc, std::range_error) {
 
         // Because 'IndexType' may be a signed type, ensure that all three
         // counts are positive. Intermediate constant 'zero' is here to
@@ -65,13 +62,12 @@ public:
         mTotalCount = countX * countY * countZ;
         mOffsetDX   = countY * countZ;
         mOffsetDY   = countZ;
-        mAllocator  = allocator ? allocator : &mStdAllocator;
-        //mData       = (ValueType*)mAllocator->allocate(mTotalCount * sizeof(ValueType));
+        mAllocator  = allocator ? allocator
+                                : static_cast<Allocator*>(&mStdAllocator);
 
-        //for (IndexType i = 0; i < mTotalCount; ++i)
-        //    new(&mData[i]) ValueType();
-
-       //fill(defaultValue);
+        // TODO: use unique_ptr<ValueType*> (with polymorphic allocator attached?!)
+        mData = static_cast<ValueType*>(mAllocator->allocate(mTotalCount * sizeof(ValueType)));
+        fill(fillValue);
     }
 
     /**
@@ -79,12 +75,12 @@ public:
      * The allocator passed to constructor is also used for deallocation.
      */
     ~SolidArray3d() {
-        // mAllocator->deallocate(mData);
+        mAllocator->deallocate(mData);
     }
 
-    void fill(ValueType val) {
-        //ValueType *data = mData;
-        //std::fill(data, data + mTotalCount, val);
+    void fill(ValueType const& val) {
+        ValueType *data = mData;
+        std::fill(data, data + mTotalCount, val);
     }
 
     /**
@@ -131,9 +127,12 @@ public:
      *
      * @see RVLM_CONFIG_RANGE_CHECK
      */
-    ValueType const& at(IndexType ix, IndexType iy, IndexType iz) const {
+    ValueType& at(IndexType ix, IndexType iy, IndexType iz) const {
         IndexType idx = itemIndex(ix, iy, iz);
-	return mData[idx];
+        if (idx < 0 || idx >= mTotalCount)
+            throw std::runtime_error("Fuck");
+
+        return mData[idx];
     }
 
     /**
@@ -142,7 +141,10 @@ public:
      */
     ValueType& at(IndexType ix, IndexType iy, IndexType iz) {
         IndexType idx = itemIndex(ix, iy, iz);
-	return mData[idx];
+        if (idx < 0 || idx >= mTotalCount)
+            throw std::runtime_error("Fuck");
+
+        return mData[idx];
     }
 
     /**
@@ -150,6 +152,8 @@ public:
      * @see REF_SECTION_CURSORS
      */
     ValueType& at(const CursorType& cursor) const {
+        if (cursor < mData || cursor >= mData + mTotalCount)
+            throw std::runtime_error("Fuck");
         return *cursor;
     }
 
@@ -201,6 +205,17 @@ public:
         ++cursor;
     }
 
+    void cursorCoordinates(CursorType cursor, IndexType& ix, IndexType& iy, IndexType& iz) {
+        IndexType idxl = cursor - mData;
+        iz =  idxl % mCountZ;
+        idxl /= mCountZ;
+
+        iy = idxl % mCountY;
+        idxl /= mCountY;
+
+        ix = idxl;
+    }
+
 private:
 
     IndexType itemIndex(IndexType ix, IndexType iy, IndexType iz) const {
@@ -221,10 +236,10 @@ private:
     IndexType      mOffsetDX;
     IndexType      mOffsetDY;
     Allocator*     mAllocator;
-    std::vector<ValueType> mData;
+    ValueType*     mData;
     StandardAllocator mStdAllocator;
 };
 
-} // namespace Core
-} // namespace Rvlm
+} // namespace core
+} // namespace rvlm
 

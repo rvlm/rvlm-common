@@ -24,7 +24,7 @@ if(RVLM_CORE_BUILD_TESTS)
     add_executable(rvlm-common-test
         test/Flags_test.cc
         test/main.cc)
-    target_link_libraries(rvlm-common-test rvlm-common Thirdparty::Catch)
+    target_link_libraries(rvlm-common-test rvlm-common)
     set_target_properties(rvlm-common-test PROPERTIES
         CXX_STANDARD_REQUIRED TRUE
         CXX_STANDARD          11)

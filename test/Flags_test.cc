@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <catch/catch.hpp>
 #include "rvlm/core/Flags.hh"
 using rvlm::core::Flags;
 using rvlm::core::operator |;

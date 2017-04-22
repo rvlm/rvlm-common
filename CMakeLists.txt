@@ -15,7 +15,10 @@ add_library(rvlm-common
     include/rvlm/core/Math.hh
     include/rvlm/core/Constants.hh
     src/dummy.cc)
-target_include_directories(rvlm-common PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+target_include_directories(rvlm-common
+    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
 set_target_properties(rvlm-common PROPERTIES
     CXX_STANDARD_REQUIRED TRUE
     CXX_STANDARD          11)

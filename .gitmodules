@@ -1,0 +1,4 @@
+[submodule "submodules/Catch"]
+	path = submodules/Catch
+	url = https://github.com/philsquared/Catch.git
+	shallow = true

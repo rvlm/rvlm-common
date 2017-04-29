@@ -1,14 +1,13 @@
 #pragma once
+#include <cstddef>
 #include <stdexcept>
+#include <utility>
 #include "rvlm/core/memory/Allocator.hh"
 #include "rvlm/core/memory/OperatorNewAllocator.hh"
 #include "rvlm/core/NonAssignable.hh"
 
 namespace rvlm {
 namespace core {
-
-using Allocator = rvlm::core::memory::Allocator;
-using StandardAllocator = rvlm::core::memory::OperatorNewAllocator;
 
 /**
  * Tridimensional array in a solid block of memory.
@@ -24,11 +23,14 @@ using StandardAllocator = rvlm::core::memory::OperatorNewAllocator;
  * object initialization in individual cells is performed. This is done
  * intentionally for runtime performance.
  */
-template <typename TValue>
+template <typename TValue, typename TIndex = std::size_t>
 class SolidArray3d: public rvlm::core::NonAssignable {
 public:
 
-    typedef std::int_fast32_t IndexType;
+    using Allocator = rvlm::core::memory::Allocator;
+    using StandardAllocator = rvlm::core::memory::OperatorNewAllocator;
+
+    typedef int_fast32_t IndexType;
     typedef TValue            ValueType;
     typedef TValue*           CursorType;
 
@@ -56,6 +58,9 @@ public:
         if (countX <= zero || countY <= zero || countZ <= zero)
             throw std::range_error("wrong array count");
 
+        mBeginX     = 0;
+        mBeginY     = 0;
+        mBeginZ     = 0;
         mCountX     = countX;
         mCountY     = countY;
         mCountZ     = countZ;
@@ -70,6 +75,25 @@ public:
         fill(fillValue);
     }
 
+    // NB: Ranges are semi-inclusive: [start, stop).
+    SolidArray3d(
+            std::pair<IndexType, IndexType> xRange,
+            std::pair<IndexType, IndexType> yRange,
+            std::pair<IndexType, IndexType> zRange,
+            ValueType fillValue = 0,
+            Allocator* allocator = 0)
+            throw(std::bad_alloc, std::range_error)
+                : SolidArray3d(xRange.second - xRange.first,
+                               yRange.second - yRange.first,
+                               zRange.second - zRange.first,
+                               fillValue,
+                               allocator) {
+
+        mBeginX = xRange.first;
+        mBeginY = yRange.first;
+        mBeginZ = zRange.first;
+    }
+
     /**
      * Destructs array with all its data.
      * The allocator passed to constructor is also used for deallocation.
@@ -82,6 +106,14 @@ public:
         ValueType *data = mData;
         std::fill(data, data + mTotalCount, val);
     }
+
+    IndexType getBeginX() const { return mBeginX; }
+    IndexType getBeginY() const { return mBeginY; }
+    IndexType getBeginZ() const { return mBeginZ; }
+
+    IndexType getEndX() const { return mCountX - mBeginX; }
+    IndexType getEndY() const { return mCountY - mBeginY; }
+    IndexType getEndZ() const { return mCountZ - mBeginZ; }
 
     /**
      * Gets number of items along X dimension.
@@ -128,8 +160,8 @@ public:
      * @see RVLM_CONFIG_RANGE_CHECK
      */
     ValueType& at(IndexType ix, IndexType iy, IndexType iz) const {
-        IndexType idx = itemIndex(ix, iy, iz);
-        if (idx < 0 || idx >= mTotalCount)
+        size_t idx = itemIndex(ix, iy, iz);
+        if (idx >= mTotalCount)
             throw std::runtime_error("Fuck");
 
         return mData[idx];
@@ -140,8 +172,8 @@ public:
      * For performance reasons no range checking is performed.
      */
     ValueType& at(IndexType ix, IndexType iy, IndexType iz) {
-        IndexType idx = itemIndex(ix, iy, iz);
-        if (idx < 0 || idx >= mTotalCount)
+        size_t idx = itemIndex(ix, iy, iz);
+        if (idx >= mTotalCount)
             throw std::runtime_error("Fuck");
 
         return mData[idx];
@@ -206,29 +238,42 @@ public:
     }
 
     void cursorCoordinates(CursorType cursor, IndexType& ix, IndexType& iy, IndexType& iz) {
-        IndexType idxl = cursor - mData;
-        iz =  idxl % mCountZ;
+        if (cursor < mData || cursor >= mData + mTotalCount)
+            throw std::runtime_error("Fuck");
+
+        size_t idxl = cursor - mData;
+        iz = idxl % mCountZ;
         idxl /= mCountZ;
 
         iy = idxl % mCountY;
         idxl /= mCountY;
 
         ix = idxl;
+
+        ix += mBeginX;
+        iy += mBeginY;
+        iz += mBeginZ;
     }
 
 private:
 
-    IndexType itemIndex(IndexType ix, IndexType iy, IndexType iz) const {
+    size_t itemIndex(IndexType ix, IndexType iy, IndexType iz) const {
         //RVLM_RANGE_ASSERT(0 <= ix && ix < mCountX);
         //RVLM_RANGE_ASSERT(0 <= iy && ix < mCountY);
         //RVLM_RANGE_ASSERT(0 <= iz && ix < mCountZ);
-        return ix*mOffsetDX + iy*mOffsetDY + iz;
+        size_t aix = static_cast<size_t>(ix - mBeginX);
+        size_t aiy = static_cast<size_t>(iy - mBeginY);
+        size_t aiz = static_cast<size_t>(iz - mBeginZ);
+        return aix*mOffsetDX + aix*mOffsetDY + aiz;
     }
 
     ValueType* itemAddress(IndexType ix, IndexType iy, IndexType iz) const {
         return &mData[itemIndex(ix, iy, iz)];
     }
 
+    IndexType      mBeginX;
+    IndexType      mBeginY;
+    IndexType      mBeginZ;
     IndexType      mCountX;
     IndexType      mCountY;
     IndexType      mCountZ;

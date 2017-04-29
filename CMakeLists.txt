@@ -20,16 +20,18 @@ target_include_directories(rvlm-common
     PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set_target_properties(rvlm-common PROPERTIES
-    CXX_STANDARD_REQUIRED TRUE
+    CXX_STANDARD_REQUIRED FALSE
     CXX_STANDARD          11)
 
 if(RVLM_CORE_BUILD_TESTS)
     add_executable(rvlm-common-test
-        test/Flags_test.cc
+        #test/Flags_test.cc
         test/main.cc)
+    target_include_directories(rvlm-common-test
+        PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/submodules/Catch/include")
     target_link_libraries(rvlm-common-test rvlm-common)
     set_target_properties(rvlm-common-test PROPERTIES
-        CXX_STANDARD_REQUIRED TRUE
+        CXX_STANDARD_REQUIRED FALSE
         CXX_STANDARD          11)
     add_test(rvlm-common-test rvlm-common-test)
 endif()

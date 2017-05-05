@@ -9,6 +9,11 @@ class Cuboid {
 public:
     typedef valueType ValueType;
 
+    Cuboid(ValueType const& x1, ValueType const& y1, ValueType const& z1,
+           ValueType const& x2, ValueType const& y2, ValueType const& z2)
+        : mX1(x1), mY1(y1), mZ1(z1),
+          mX2(x2), mY2(y2), mZ2(z2) {}
+
     ValueType const& getX1() const { return mX1; }
     ValueType const& getY1() const { return mY1; }
     ValueType const& getZ1() const { return mZ1; }

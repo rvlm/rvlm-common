@@ -75,6 +75,17 @@ public:
         fill(fillValue);
     }
 
+    template <typename TTriple>
+    SolidArray3d(TTriple const& counts,
+                 ValueType fillValue = 0,
+                 Allocator* allocator = 0)
+        throw (std::bad_alloc, std::range_error)
+        : SolidArray3d(std::get<0>(counts),
+                       std::get<1>(counts),
+                       std::get<2>(counts),
+                       fillValue,
+                       allocator) {}
+
     // NB: Ranges are semi-inclusive: [start, stop).
     SolidArray3d(
             std::pair<IndexType, IndexType> xRange,

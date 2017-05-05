@@ -10,6 +10,7 @@ add_library(rvlm-common
     include/rvlm/core/NonAssignable.hh
     include/rvlm/core/SolidArray3d.hh
     include/rvlm/core/Traversable3D.hh
+    include/rvlm/core/Vector3d.hh
     include/rvlm/core/memory/AlignedAllocator.hh
     include/rvlm/core/memory/Allocator.hh
     include/rvlm/core/memory/OperatorNewAllocator.hh

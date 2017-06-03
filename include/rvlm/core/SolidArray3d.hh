@@ -27,12 +27,11 @@ template <typename TValue, typename TIndex = std::size_t>
 class SolidArray3d: public rvlm::core::NonAssignable {
 public:
 
-    using Allocator = rvlm::core::memory::Allocator;
+    using Allocator         = rvlm::core::memory::Allocator;
     using StandardAllocator = rvlm::core::memory::OperatorNewAllocator;
-
-    typedef int_fast32_t IndexType;
-    typedef TValue            ValueType;
-    typedef TValue*           CursorType;
+    using IndexType         = TIndex;
+    using ValueType         = TValue;
+    using CursorType        = TValue*;
 
     /**
      * Constructs array with given dimentions and allocator.

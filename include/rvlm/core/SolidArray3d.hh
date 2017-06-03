@@ -87,21 +87,21 @@ public:
 
     // NB: Ranges are semi-inclusive: [start, stop).
     SolidArray3d(
-            std::pair<IndexType, IndexType> xRange,
-            std::pair<IndexType, IndexType> yRange,
-            std::pair<IndexType, IndexType> zRange,
-            ValueType fillValue = 0,
+            HalfOpenRange<TIndex> const& xRange,
+            HalfOpenRange<TIndex> const& yRange,
+            HalfOpenRange<TIndex> const& zRange,
+            ValueType const& fillValue,
             Allocator* allocator = 0)
             throw(std::bad_alloc, std::range_error)
-                : SolidArray3d(xRange.second - xRange.first,
-                               yRange.second - yRange.first,
-                               zRange.second - zRange.first,
+                : SolidArray3d(xRange.stop - xRange.start,
+                               yRange.stop - yRange.start,
+                               zRange.stop - zRange.start,
                                fillValue,
                                allocator) {
 
-        mBeginX = xRange.first;
-        mBeginY = yRange.first;
-        mBeginZ = zRange.first;
+        mBeginX = xRange.start;
+        mBeginY = yRange.start;
+        mBeginZ = zRange.start;
     }
 
     /**

@@ -6,6 +6,7 @@ add_library(rvlm-common
     include/rvlm/core/Constants.hh
     include/rvlm/core/Cuboid.hh
     include/rvlm/core/Flags.hh
+    include/rvlm/core/HalfOpenRange.hh
     include/rvlm/core/Math.hh
     include/rvlm/core/NonAssignable.hh
     include/rvlm/core/SolidArray3d.hh

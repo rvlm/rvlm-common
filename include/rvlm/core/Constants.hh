@@ -10,8 +10,8 @@ namespace core {
  */
 template <typename TFloat>
 class Constants {
-
 public:
+
     /**
      * Euclid pi number (dimensionless quantity).
      * This constant is defines here because C++ standard library does not

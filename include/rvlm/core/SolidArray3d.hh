@@ -78,7 +78,7 @@ public:
     SolidArray3d(TTriple const& counts,
                  ValueType const& fillValue,
                  Allocator* allocator = 0)
-        throw (std::bad_alloc, std::range_error)
+                 throw (std::bad_alloc, std::range_error)
         : SolidArray3d(std::get<0>(counts),
                        std::get<1>(counts),
                        std::get<2>(counts),

@@ -46,7 +46,7 @@ public:
         IndexType countX,
         IndexType countY,
         IndexType countZ,
-        ValueType fillValue = 0,
+        ValueType const& fillValue,
         Allocator* allocator = 0)
         throw(std::bad_alloc, std::range_error) {
 
@@ -76,7 +76,7 @@ public:
 
     template <typename TTriple>
     SolidArray3d(TTriple const& counts,
-                 ValueType fillValue = 0,
+                 ValueType const& fillValue,
                  Allocator* allocator = 0)
         throw (std::bad_alloc, std::range_error)
         : SolidArray3d(std::get<0>(counts),

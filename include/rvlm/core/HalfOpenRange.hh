@@ -15,6 +15,13 @@ public:
     TInt const start;
     TInt const stop;
 
+    TInt size() const {
+        return stop - start;
+    }
+
+    HalfOpenRange()
+        : start(0), stop(1) {}
+
     HalfOpenRange(TInt start, TInt stop)
         : start(start), stop(std::max(start, stop)) {}
 

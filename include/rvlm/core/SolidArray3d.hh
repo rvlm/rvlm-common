@@ -5,6 +5,7 @@
 #include "rvlm/core/memory/Allocator.hh"
 #include "rvlm/core/memory/OperatorNewAllocator.hh"
 #include "rvlm/core/NonAssignable.hh"
+#include "rvlm/core/HalfOpenRange.hh"
 
 namespace rvlm {
 namespace core {

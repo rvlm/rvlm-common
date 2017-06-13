@@ -274,7 +274,7 @@ private:
         size_t aix = static_cast<size_t>(ix - mBeginX);
         size_t aiy = static_cast<size_t>(iy - mBeginY);
         size_t aiz = static_cast<size_t>(iz - mBeginZ);
-        return aix*mOffsetDX + aix*mOffsetDY + aiz;
+        return aix*mOffsetDX + aiy*mOffsetDY + aiz;
     }
 
     ValueType* itemAddress(IndexType ix, IndexType iy, IndexType iz) const {

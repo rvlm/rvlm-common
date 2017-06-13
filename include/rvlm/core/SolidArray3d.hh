@@ -6,6 +6,7 @@
 #include "rvlm/core/memory/OperatorNewAllocator.hh"
 #include "rvlm/core/NonAssignable.hh"
 #include "rvlm/core/HalfOpenRange.hh"
+#include "rvlm/core/detail/StaticCursorHelpers.hh"
 
 namespace rvlm {
 namespace core {
@@ -219,6 +220,13 @@ public:
         return itemAddress(ix, iy, iz);
     }
 
+    template <int Axis0, int Axis1, int Axis2>
+    CursorType getCursor(IndexType i0, IndexType i1, IndexType i2) const {
+        return detail::GetCursorHelper<SolidArray3d<TValue, TIndex>, Axis0, Axis1, Axis2>
+                     ::get(*this, i0, i1, i2);
+    }
+
+
     void cursorMoveTo(
         CursorType& cursor, IndexType ix, IndexType iy, IndexType iz) const {
         cursor = itemAddress(ix, iy, iz);
@@ -246,6 +254,19 @@ public:
 
     void cursorMoveToNextZ(CursorType& cursor) const {
         ++cursor;
+    }
+
+
+    template <int Axis>
+    void cursorMoveToNext(CursorType& cursor) const {
+        return detail::MoveCursorHelper<SolidArray3d<TValue, TIndex>, Axis>
+                     ::moveToNext(*this, cursor);
+    }
+
+    template <int Axis>
+    void cursorMoveToPrev(CursorType& cursor) const {
+        return detail::MoveCursorHelper<SolidArray3d<TValue, TIndex>, Axis>
+                     ::moveToPrev(*this, cursor);
     }
 
     void cursorCoordinates(CursorType cursor, IndexType& ix, IndexType& iy, IndexType& iz) {

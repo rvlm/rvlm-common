@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 option(RVLM_CORE_BUILD_TESTS "Build unit tests for rvlm-core library")
 
 add_library(rvlm-common
+    include/rvlm/core/detail/StaticCursorHelpers.hh
     include/rvlm/core/Constants.hh
     include/rvlm/core/Cuboid.hh
     include/rvlm/core/Flags.hh

@@ -76,17 +76,6 @@ public:
         fill(fillValue);
     }
 
-    template <typename TTriple>
-    SolidArray3d(TTriple const& counts,
-                 ValueType const& fillValue,
-                 Allocator* allocator = 0)
-                 throw (std::bad_alloc, std::range_error)
-        : SolidArray3d(std::get<0>(counts),
-                       std::get<1>(counts),
-                       std::get<2>(counts),
-                       fillValue,
-                       allocator) {}
-
     // NB: Ranges are semi-inclusive: [start, stop).
     SolidArray3d(
             HalfOpenRange<TIndex> const& xRange,
@@ -105,6 +94,17 @@ public:
         mBeginY = yRange.start;
         mBeginZ = zRange.start;
     }
+
+    template <typename TTriple>
+    SolidArray3d(TTriple const& counts,
+                 ValueType const& fillValue,
+                 Allocator* allocator = 0)
+                 throw (std::bad_alloc, std::range_error)
+        : SolidArray3d(std::get<0>(counts),
+                       std::get<1>(counts),
+                       std::get<2>(counts),
+                       fillValue,
+                       allocator) {}
 
     /**
      * Destructs array with all its data.

@@ -171,7 +171,7 @@ public:
      *
      * @see RVLM_CONFIG_RANGE_CHECK
      */
-    ValueType& at(IndexType ix, IndexType iy, IndexType iz) const {
+    ValueType const& at(IndexType ix, IndexType iy, IndexType iz) const {
         size_t idx = itemIndex(ix, iy, iz);
         if (idx >= mTotalCount)
             throw std::runtime_error("Fuck");
@@ -269,7 +269,7 @@ public:
                      ::moveToPrev(*this, cursor);
     }
 
-    void cursorCoordinates(CursorType cursor, IndexType& ix, IndexType& iy, IndexType& iz) {
+    void cursorCoordinates(CursorType cursor, IndexType& ix, IndexType& iy, IndexType& iz) const {
         if (cursor < mData || cursor >= mData + mTotalCount)
             throw std::runtime_error("Fuck");
 

@@ -42,7 +42,7 @@ public:
             --mCurrentValue; return *this;
         }
 
-        TInt const& operator *() const {
+        TInt const operator *() const {
             return mCurrentValue;
         }
 

@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <utility>
+#include <boost/numeric/conversion/cast.hpp>
 #include "rvlm/core/memory/Allocator.hh"
 #include "rvlm/core/memory/OperatorNewAllocator.hh"
 #include "rvlm/core/NonAssignable.hh"
@@ -293,9 +294,9 @@ private:
         //RVLM_RANGE_ASSERT(0 <= ix && ix < mCountX);
         //RVLM_RANGE_ASSERT(0 <= iy && ix < mCountY);
         //RVLM_RANGE_ASSERT(0 <= iz && ix < mCountZ);
-        size_t aix = static_cast<size_t>(ix - mBeginX);
-        size_t aiy = static_cast<size_t>(iy - mBeginY);
-        size_t aiz = static_cast<size_t>(iz - mBeginZ);
+        size_t aix = boost::numeric_cast<size_t>(ix - mBeginX);
+        size_t aiy = boost::numeric_cast<size_t>(iy - mBeginY);
+        size_t aiz = boost::numeric_cast<size_t>(iz - mBeginZ);
         return aix*mOffsetDX + aiy*mOffsetDY + aiz;
     }
 

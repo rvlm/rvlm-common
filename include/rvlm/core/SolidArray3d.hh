@@ -259,14 +259,14 @@ public:
 
     template <int Axis>
     void cursorMoveToNext(CursorType& cursor) const {
-        return detail::MoveCursorHelper<SolidArray3d<TValue, TIndex>, Axis>
-                     ::moveToNext(*this, cursor);
+        detail::MoveCursorHelper<SolidArray3d<TValue, TIndex>, Axis>
+              ::moveToNext(*this, cursor);
     }
 
     template <int Axis>
     void cursorMoveToPrev(CursorType& cursor) const {
-        return detail::MoveCursorHelper<SolidArray3d<TValue, TIndex>, Axis>
-                     ::moveToPrev(*this, cursor);
+        detail::MoveCursorHelper<SolidArray3d<TValue, TIndex>, Axis>
+              ::moveToPrev(*this, cursor);
     }
 
     void cursorCoordinates(CursorType cursor, IndexType& ix, IndexType& iy, IndexType& iz) const {

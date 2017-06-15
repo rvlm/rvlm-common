@@ -24,9 +24,9 @@ public:
                                                                          \
         static                                                           \
         CursorType get(TSolidArray3d const& array,                       \
-                       IndexType i0, IndexType i1, IndexType i2) {       \
+                     IndexType i##A0, IndexType i##A1, IndexType i##A2) {\
                                                                          \
-            return array.getCursor(i##A0, i##A1, i##A2);                 \
+            return array.getCursor(i0, i1, i2);                          \
         }                                                                \
     }
 

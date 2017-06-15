@@ -30,6 +30,7 @@ template <typename TValue, typename TIndex = std::size_t>
 class SolidArray3d: public rvlm::core::NonAssignable {
 public:
 
+    using ThisType          = SolidArray3d<TValue, TIndex>;
     using Allocator         = rvlm::core::memory::Allocator;
     using StandardAllocator = rvlm::core::memory::OperatorNewAllocator;
     using IndexType         = TIndex;
@@ -194,14 +195,12 @@ public:
 
     template <int Axis0, int Axis1, int Axis2>
     ValueType const& at(IndexType i0, IndexType i1, IndexType i2) const {
-        using ThisType = SolidArray3d<TValue, TIndex>;
         return detail::GetCursorHelper<ThisType, Axis0, Axis1, Axis2>
                      ::at(*this, i0, i1, i2);
     }
 
     template <int Axis0, int Axis1, int Axis2>
     ValueType& at(IndexType i0, IndexType i1, IndexType i2) {
-        using ThisType = SolidArray3d<TValue, TIndex>;
         return detail::GetCursorHelper<ThisType, Axis0, Axis1, Axis2>
                      ::at(*this, i0, i1, i2);
     }
@@ -236,8 +235,8 @@ public:
     }
 
     template <int Axis0, int Axis1, int Axis2>
-    CursorType getCursor(IndexType i0, IndexType i1, IndexType i2) const {
-        return detail::GetCursorHelper<SolidArray3d<TValue, TIndex>, Axis0, Axis1, Axis2>
+    CursorType getCursorX(IndexType i0, IndexType i1, IndexType i2) const {
+        return detail::GetCursorHelper<ThisType, Axis0, Axis1, Axis2>
                      ::get(*this, i0, i1, i2);
     }
 
@@ -274,13 +273,13 @@ public:
 
     template <int Axis>
     void cursorMoveToNext(CursorType& cursor) const {
-        detail::MoveCursorHelper<SolidArray3d<TValue, TIndex>, Axis>
+        detail::MoveCursorHelper<ThisType, Axis>
               ::moveToNext(*this, cursor);
     }
 
     template <int Axis>
     void cursorMoveToPrev(CursorType& cursor) const {
-        detail::MoveCursorHelper<SolidArray3d<TValue, TIndex>, Axis>
+        detail::MoveCursorHelper<ThisType, Axis>
               ::moveToPrev(*this, cursor);
     }
 

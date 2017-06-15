@@ -192,6 +192,20 @@ public:
         return mData[idx];
     }
 
+    template <int Axis0, int Axis1, int Axis2>
+    ValueType const& at(IndexType i0, IndexType i1, IndexType i2) const {
+        using ThisType = SolidArray3d<TValue, TIndex>;
+        return detail::GetCursorHelper<ThisType, Axis0, Axis1, Axis2>
+                     ::at(*this, i0, i1, i2);
+    }
+
+    template <int Axis0, int Axis1, int Axis2>
+    ValueType& at(IndexType i0, IndexType i1, IndexType i2) {
+        using ThisType = SolidArray3d<TValue, TIndex>;
+        return detail::GetCursorHelper<ThisType, Axis0, Axis1, Axis2>
+                     ::at(*this, i0, i1, i2);
+    }
+
     /**
      * Accesses item pointed by cursor for reading only.
      * @see REF_SECTION_CURSORS

@@ -7,8 +7,17 @@ template <typename TSolidArray3d, int Axis0, int Axis1, int Axis2>
 class GetCursorHelper {
 public:
 
-    using CursorType = typename TSolidArray3d::CursorType;
     using IndexType  = typename TSolidArray3d::IndexType;
+    using ValueType  = typename TSolidArray3d::ValueType;
+    using CursorType = typename TSolidArray3d::CursorType;
+
+    static
+    ValueType const& at(TSolidArray3d const& array,
+                   IndexType i0, IndexType i1, IndexType i2);
+
+    static
+    ValueType& at(TSolidArray3d& array,
+                   IndexType i0, IndexType i1, IndexType i2);
 
     static
     CursorType get(TSolidArray3d const& array,
@@ -19,8 +28,21 @@ public:
     template <typename TSolidArray3d>                                    \
     class GetCursorHelper<TSolidArray3d, (A0), (A1), (A2)> {             \
     public:                                                              \
-        using CursorType = typename TSolidArray3d::CursorType;           \
         using IndexType  = typename TSolidArray3d::IndexType;            \
+        using ValueType  = typename TSolidArray3d::ValueType;            \
+        using CursorType = typename TSolidArray3d::CursorType;           \
+                                                                         \
+        static                                                           \
+        ValueType const& at(TSolidArray3d const& array,                  \
+                     IndexType i##A0, IndexType i##A1, IndexType i##A2) {\
+            return array.at(i0, i1, i2);                                 \
+        }                                                                \
+                                                                         \
+        static                                                           \
+        ValueType& at(TSolidArray3d& array,                              \
+                     IndexType i##A0, IndexType i##A1, IndexType i##A2) {\
+            return array.at(i0, i1, i2);                                 \
+        }                                                                \
                                                                          \
         static                                                           \
         CursorType get(TSolidArray3d const& array,                       \
